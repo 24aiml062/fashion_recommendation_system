@@ -16,7 +16,8 @@ class StyleProfile(Base):
     streetwear_score = Column(Float, default=0.0)
     formal_score = Column(Float, default=0.0)
     athleisure_score = Column(Float, default=0.0)
-    vintage_score = Column(Float, default=0.0)
+    indo_western_score = Column(Float, default=0.0)
+    ethnic_score = Column(Float, default=0.0)
 
     # Lifestyle
     lifestyle = Column(String, default="student")  # student, professional

@@ -4,30 +4,30 @@ from app.models.style import StyleProfile, StyleQuizResponse
 from app.models.outfit import OutfitPreference
 from app.schemas.style import QuizSubmission, TinderSwipe, OutfitTinderItem, StyleEvolution
 
-# Curated outfit cards for Tinder feature
+# Curated outfit cards for Tinder feature — India context
 TINDER_OUTFITS = [
-    OutfitTinderItem(id="t1", style="minimalist", description="White tee, tailored trousers, white sneakers",
+    OutfitTinderItem(id="t1", style="minimalist", description="White kurta, straight trousers, white sneakers",
                      colors=["white","black"], occasion="casual", season=["spring","summer"], image_placeholder="🤍"),
-    OutfitTinderItem(id="t2", style="old_money", description="Polo shirt, chinos, loafers",
-                     colors=["navy","beige"], occasion="smart_casual", season=["spring","fall"], image_placeholder="🎿"),
+    OutfitTinderItem(id="t2", style="old_money", description="Polo shirt, chinos, leather loafers",
+                     colors=["navy","beige"], occasion="smart_casual", season=["winter","fall"], image_placeholder="🎿"),
     OutfitTinderItem(id="t3", style="streetwear", description="Graphic hoodie, cargo pants, chunky sneakers",
-                     colors=["black","grey"], occasion="casual", season=["fall","winter"], image_placeholder="🖤"),
+                     colors=["black","grey"], occasion="casual", season=["winter","fall"], image_placeholder="🖤"),
     OutfitTinderItem(id="t4", style="formal", description="Slim suit, dress shirt, Oxford shoes",
                      colors=["charcoal","white"], occasion="formal", season=["all"], image_placeholder="🎩"),
     OutfitTinderItem(id="t5", style="athleisure", description="Track jacket, joggers, clean sneakers",
                      colors=["white","navy"], occasion="casual", season=["spring","summer"], image_placeholder="🏃"),
-    OutfitTinderItem(id="t6", style="vintage", description="Denim jacket, mom jeans, retro sneakers",
-                     colors=["blue","cream"], occasion="casual", season=["spring","fall"], image_placeholder="🌻"),
+    OutfitTinderItem(id="t6", style="indo_western", description="Nehru jacket, slim trousers, juttis",
+                     colors=["maroon","gold"], occasion="festival", season=["all"], image_placeholder="✨"),
     OutfitTinderItem(id="t7", style="smart_casual", description="Oxford shirt, dark jeans, Chelsea boots",
-                     colors=["blue","brown"], occasion="work", season=["fall","winter"], image_placeholder="👔"),
-    OutfitTinderItem(id="t8", style="old_money", description="Cashmere sweater, pressed trousers, monk straps",
-                     colors=["camel","navy"], occasion="smart_casual", season=["fall","winter"], image_placeholder="🧥"),
+                     colors=["blue","brown"], occasion="work", season=["winter","fall"], image_placeholder="👔"),
+    OutfitTinderItem(id="t8", style="ethnic", description="Kurta pyjama, kolhapuri chappals",
+                     colors=["white","off-white"], occasion="festival", season=["all"], image_placeholder="🪔"),
 ]
 
 STYLE_OUTFIT_MAP = {
     "t1": "minimalist", "t2": "old_money", "t3": "streetwear",
-    "t4": "formal", "t5": "athleisure", "t6": "vintage",
-    "t7": "smart_casual", "t8": "old_money",
+    "t4": "formal", "t5": "athleisure", "t6": "indo_western",
+    "t7": "smart_casual", "t8": "ethnic",
 }
 
 def get_tinder_outfits() -> list[OutfitTinderItem]:
@@ -37,7 +37,7 @@ def get_tinder_outfits() -> list[OutfitTinderItem]:
 async def process_quiz(db: AsyncSession, user_id: int, data: QuizSubmission) -> StyleProfile:
     # Compute style scores from outfit ratings
     style_votes: dict[str, list[int]] = {s: [] for s in [
-        "minimalist","old_money","smart_casual","streetwear","formal","athleisure","vintage"
+        "minimalist","old_money","smart_casual","streetwear","formal","athleisure","indo_western","ethnic"
     ]}
 
     for outfit_id, rating in data.outfit_ratings.items():
@@ -68,7 +68,8 @@ async def process_quiz(db: AsyncSession, user_id: int, data: QuizSubmission) -> 
     profile.streetwear_score = scores["streetwear"]
     profile.formal_score = scores["formal"]
     profile.athleisure_score = scores["athleisure"]
-    profile.vintage_score = scores["vintage"]
+    profile.indo_western_score = scores["indo_western"]
+    profile.ethnic_score = scores["ethnic"]
     profile.dominant_style = dominant
 
     profile.lifestyle = data.lifestyle
@@ -103,7 +104,7 @@ async def update_scores_from_swipe(db: AsyncSession, user_id: int, swipe: Tinder
     setattr(profile, field, round(max(0.0, min(1.0, current + delta)), 3))
 
     # Recompute dominant
-    style_fields = ["minimalist","old_money","smart_casual","streetwear","formal","athleisure","vintage"]
+    style_fields = ["minimalist","old_money","smart_casual","streetwear","formal","athleisure","indo_western","ethnic"]
     scores = {s: getattr(profile, f"{s}_score", 0.0) for s in style_fields}
     profile.dominant_style = max(scores, key=lambda k: scores[k])
 
@@ -127,7 +128,8 @@ async def get_evolution(db: AsyncSession, user_id: int) -> StyleEvolution:
         "Streetwear": profile.streetwear_score,
         "Formal": profile.formal_score,
         "Athleisure": profile.athleisure_score,
-        "Vintage": profile.vintage_score,
+        "Indo Western": profile.indo_western_score,
+        "Ethnic": profile.ethnic_score,
     }
 
     # Count liked outfit styles

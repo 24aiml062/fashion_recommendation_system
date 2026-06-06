@@ -34,7 +34,8 @@ class StyleProfileResponse(BaseModel):
     streetwear_score: float
     formal_score: float
     athleisure_score: float
-    vintage_score: float
+    indo_western_score: float
+    ethnic_score: float
     lifestyle: str
     social_frequency: str
     daily_environment: str
