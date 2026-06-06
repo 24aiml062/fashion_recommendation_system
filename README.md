@@ -23,7 +23,7 @@ fashion_copilot/
 │   ├── tests/
 │   ├── requirements.txt
 │   └── .env.example
-└── frontend/         # Flutter app
+└── frontend/         
     ├── lib/
     │   ├── core/         # Theme, router, constants
     │   ├── models/       # Data models
@@ -61,12 +61,7 @@ uvicorn app.main:app --reload
 
 API docs available at: http://localhost:8000/docs
 
-### Flutter
 
-```bash
-cd frontend
-flutter pub get
-flutter run
 ```
 
 Update `lib/core/constants.dart` → `baseUrl` to point to your backend.
