@@ -1,0 +1,22 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/**/__pycache__/
+backend/*.db
+backend/.env
+**/*.pyc
+**/*.pyo
+.pytest_cache/
+
+# Flutter
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/build/
+frontend/.pub-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
